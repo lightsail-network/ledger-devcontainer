@@ -79,6 +79,10 @@ jobs:
             latest=auto
             prefix=
             suffix=
+
+      - name: Echo tags
+        run: echo ${{ steps.meta.outputs.tags }}
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
