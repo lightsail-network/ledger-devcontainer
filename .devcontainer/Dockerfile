@@ -25,6 +25,10 @@ ARG USER_GID=$USER_UID
 
 ARG LLVM_VERSION=12
 
+ARG NANOS_SDK_VERSION=2.1.0
+ARG NANOSPLUS_SDK_VERSION=1.0.2
+ARG NANOX_SDK_VERSION=2.0.2-2
+
 ARG ARM_TOOLCHAIN_VERSION=10.3-2021.10
 ARG ARM_TOOLCHAIN_AMD64_MD5=2383e4eb4ea23f248d33adc70dc3227e
 ARG ARM_TOOLCHAIN_ARM64_MD5=3fe3d8bb693bd0a6e4615b6569443d0d
@@ -39,9 +43,8 @@ RUN if [ ! -z "${APT_MIRROR}" ]; then \
     ; fi \
     ; grep "^[^#;]" /etc/apt/sources.list
 
-RUN apt-get update && apt-get upgrade -qy
 
-RUN apt-get install -qy \
+RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     apt-utils \
     ca-certificates\
     locales \
@@ -64,14 +67,12 @@ RUN apt-get install -qy \
     python3-pip \
     gcc-arm-linux-gnueabihf \
     qemu-user-static \
-    fish
-
-RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100
-RUN update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${LLVM_VERSION} 100
-
-RUN apt-get autoclean -y && \
+    fish && \
+    apt-get autoclean -y && \
     apt-get autoremove -y && \
-    apt-get clean
+    apt-get clean && \
+    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 && \
+    update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${LLVM_VERSION} 100
 
 # ARM Embedded Toolchain
 # Integrity is checked using the MD5 checksum provided by ARM at https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
@@ -90,12 +91,10 @@ RUN case $(uname -m) in \
     tar xf arm-toolchain.tar.bz2 -C /opt && \
     rm arm-toolchain.tar.bz2
 
-# Latest Nano S SDK
-RUN cd /opt && git clone --branch 2.1.0 https://github.com/LedgerHQ/nanos-secure-sdk.git nanos-secure-sdk
-# Latest Nano S Plus SDK
-RUN cd /opt && git clone --branch 1.0.2 https://github.com/LedgerHQ/nanosplus-secure-sdk.git nanosplus-secure-sdk
-# Latest Nano X SDK
-RUN cd /opt && git clone --branch 2.0.2-2 https://github.com/LedgerHQ/nanox-secure-sdk.git nanox-secure-sdk
+# Download Nano S SDK, Nano S Plus SDK and Nano X SDK
+RUN cd /opt && git clone --branch ${NANOS_SDK_VERSION} https://github.com/LedgerHQ/nanos-secure-sdk.git nanos-secure-sdk && \
+    git clone --branch ${NANOSPLUS_SDK_VERSION} https://github.com/LedgerHQ/nanosplus-secure-sdk.git nanosplus-secure-sdk && \
+    git clone --branch ${NANOX_SDK_VERSION} https://github.com/LedgerHQ/nanox-secure-sdk.git nanox-secure-sdk
 
 # Set PyPi Mirror (root)
 RUN if [ ! -z "${PIP_INDEX}" ] && [ ! -z "${PIP_INDEX_URL}" ]; then \
@@ -109,11 +108,11 @@ RUN cd /opt \
     && sed -i 's/-DWITH_VNC=1/-DWITH_VNC=0/g' setup.py \
     # disable qt
     && sed -i '/pyqt5/d' setup.py \
-    && pip3 install . \
+    && pip3 install --no-cache-dir . \
     # https://github.com/pypa/pip/issues/4880
     && python3 setup.py install \
     # Werkzeug >= 2.1.0 fail
-    && pip3 install Werkzeug==2.0.3
+    && pip3 install --no-cache-dir Werkzeug==2.0.3
 
 # Set up locale
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -148,3 +147,5 @@ ENV BOLOS_SDK=${NANOS_SDK}
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
+
+CMD ["/usr/bin/env", "bash"]
