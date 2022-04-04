@@ -31,3 +31,7 @@ It contains the following:
 5. `/opt/gcc-arm-none-eabi-10.3-2021.10/` - [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
 
 The `devcontainer.json` has some additional configuration for VSCode, in particular, the required extensions that have to be installed, and the name of the remote user (must match the one in the `Dockerfile`), and `BOLOS_SDK` is set to `NANOS_SDK` by default, you can change it in the file.
+
+## Does it work on Apple Silicon?
+
+**Yes.**
