@@ -140,7 +140,7 @@ RUN if [ ! -z "${PIP_INDEX}" ] && [ ! -z "${PIP_INDEX_URL}" ]; then \
 ENV PATH=/opt/gcc-arm-none-eabi-${ARM_TOOLCHAIN_VERSION}/bin:/opt/speculos:$PATH
 
 ENV NANOS_SDK=/opt/nanos-secure-sdk
-ENV NANOSPLUS_SDK=/opt/nanox-secure-sdk
+ENV NANOSPLUS_SDK=/opt/nanoplus-secure-sdk
 ENV NANOX_SDK=/opt/nanox-secure-sdk
 
 # Default SDK
