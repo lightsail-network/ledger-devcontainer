@@ -90,8 +90,7 @@ RUN cd /opt \
     && sed -i 's/-DWITH_VNC=1/-DWITH_VNC=0/g' setup.py \
     # disable qt
     && sed -i '/pyqt5/d' setup.py \
-    # https://github.com/pypa/pip/issues/4880
-    && python setup.py install \
+    && pip install . \
     # Werkzeug >= 2.1.0 fail
     && pip install Werkzeug==2.0.3 \
     # && pip cache purge
