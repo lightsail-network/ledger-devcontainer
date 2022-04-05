@@ -137,7 +137,7 @@ RUN if [ ! -z "${PIP_INDEX}" ] && [ ! -z "${PIP_INDEX_URL}" ]; then \
     ; fi
 
 # Adding GCC and speculos to path
-ENV PATH=/opt/gcc-arm-none-eabi-${ARM_TOOLCHAIN_VERSION}/bin:/opt/speculos:$PATH
+ENV PATH=/opt/gcc-arm-none-eabi-${ARM_TOOLCHAIN_VERSION}/bin:$PATH
 
 ENV NANOS_SDK=/opt/nanos-secure-sdk
 ENV NANOSPLUS_SDK=/opt/nanoplus-secure-sdk
