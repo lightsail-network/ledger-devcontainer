@@ -148,4 +148,4 @@ ENV BOLOS_SDK=${NANOS_SDK}
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
 
-CMD ["/usr/bin/env", "bash"]
+CMD ["/usr/bin/env", "fish"]
