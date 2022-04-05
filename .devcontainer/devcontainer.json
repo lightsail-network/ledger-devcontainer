@@ -48,7 +48,7 @@
     },
     "9999": {
       "label": "Speculos TCP Socket",
-      "onAutoForward": "notify"
+      "onAutoForward": "silent"
     }
   },
   // Use 'otherPortsAttributes' to configure any ports that aren't configured using 'portsAttributes'.

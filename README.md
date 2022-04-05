@@ -28,7 +28,12 @@ It contains the following:
 2. `/opt/nanox-secure-sdk/` - [Nano X Secure SDK](https://github.com/LedgerHQ/nanox-secure-sdk)
 3. `/opt/nanoplus-secure-sdk/` - [Nano S Plus Secure SDK](https://github.com/LedgerHQ/nanosplus-secure-sdk)
 4. `/opt/speculos/` - [Speculos](https://github.com/LedgerHQ/speculos) (Currently only headless mode is supported.)
-5. `/opt/gcc-arm-none-eabi-10.3-2021.10/` - [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
+   
+    You can start the Speculos with the following command, in general, you can access it at http://127.0.0.1:5000/.
+    ```bash
+    speculos -m nanos -s "soft turtle draw bleak cluster note clinic select hammer rack denial lumber" bin/app.elf --display headless
+    ```
+6. `/opt/gcc-arm-none-eabi-10.3-2021.10/` - [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
 
 The `devcontainer.json` has some additional configuration for VSCode, in particular, the required extensions that have to be installed, and the name of the remote user (must match the one in the `Dockerfile`), and `BOLOS_SDK` is set to `NANOS_SDK` by default, you can change it in the file.
 
