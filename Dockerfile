@@ -45,6 +45,7 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     python3-pip \
     gcc-arm-linux-gnueabihf \
     qemu-user-static \
+    gdb-multiarch \
     fish && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
