@@ -7,7 +7,7 @@
     "args": {}
   },
   // https://code.visualstudio.com/remote/advancedcontainers/environment-variables
-  // BOLOS_SDK can be one of NANOS_SDK, NANOX_SDK and NANOSPLUS_SDK
+  // BOLOS_SDK can be one of NANOS_SDK, NANOX_SDK and NANOSP_SDK
   "remoteEnv": {
     "BOLOS_SDK": "${containerEnv:NANOS_SDK}"
   },

@@ -12,7 +12,7 @@ ARG USER_GID=${USER_UID}
 ARG LLVM_VERSION=12
 
 ARG NANOS_SDK_VERSION=2.1.0
-ARG NANOSPLUS_SDK_VERSION=1.0.2
+ARG NANOSP_SDK_VERSION=1.0.2
 ARG NANOX_SDK_VERSION=2.0.2-2
 
 ARG ARM_TOOLCHAIN_VERSION=10.3-2021.10
@@ -75,11 +75,11 @@ ENV PATH=/opt/gcc-arm-none-eabi-${ARM_TOOLCHAIN_VERSION}/bin:$PATH
 
 # Download Nano S SDK, Nano S Plus SDK and Nano X SDK
 RUN cd /opt && git clone --branch ${NANOS_SDK_VERSION} https://github.com/LedgerHQ/nanos-secure-sdk.git nanos-secure-sdk && \
-    git clone --branch ${NANOSPLUS_SDK_VERSION} https://github.com/LedgerHQ/nanosplus-secure-sdk.git nanosplus-secure-sdk && \
+    git clone --branch ${NANOSP_SDK_VERSION} https://github.com/LedgerHQ/nanosplus-secure-sdk.git nanosplus-secure-sdk && \
     git clone --branch ${NANOX_SDK_VERSION} https://github.com/LedgerHQ/nanox-secure-sdk.git nanox-secure-sdk
 
 ENV NANOS_SDK=/opt/nanos-secure-sdk
-ENV NANOSPLUS_SDK=/opt/nanoplus-secure-sdk
+ENV NANOSP_SDK=/opt/nanoplus-secure-sdk
 ENV NANOX_SDK=/opt/nanox-secure-sdk
 # Default SDK
 ENV BOLOS_SDK=${NANOS_SDK}
