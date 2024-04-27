@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
 	"name": "ledgerdev",
-	"image": "ghcr.io/overcat/ledger-devcontainer:latest",
+	"image": "ghcr.io/lightsail-network/ledger-devcontainer:latest",
   // https://code.visualstudio.com/remote/advancedcontainers/environment-variables
   // BOLOS_SDK can be one of NANOS_SDK, NANOSP_SDK, NANOX_SDK, STAX_SDK and FLEX_SDK
   "remoteEnv": {
