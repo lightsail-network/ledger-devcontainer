@@ -1,19 +1,5 @@
 # You can find more information here: https://github.com/overcat/ledger-devcontainer
-FROM ubuntu:focal
-
-# This Dockerfile adds a non-root 'ledgerdev' user with sudo access. However, for Linux,
-# this user's GID/UID must match your local user UID/GID to avoid permission issues
-# with bind mounts. Update USER_UID / USER_GID if yours is not 1000. See
-# https://aka.ms/vscode-remote/containers/non-root-user for details.
-ARG USERNAME=ledgerdev
-ARG USER_UID=1000
-ARG USER_GID=${USER_UID}
-
-ARG LLVM_VERSION=12
-
-ARG NANOS_SDK_VERSION=2.1.0
-ARG NANOSP_SDK_VERSION=1.0.3
-ARG NANOX_SDK_VERSION=2.0.2-2
+FROM ubuntu:jammy
 
 ARG ARM_TOOLCHAIN_VERSION=10.3-2021.10
 ARG ARM_TOOLCHAIN_AMD64_MD5=2383e4eb4ea23f248d33adc70dc3227e
@@ -26,10 +12,10 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     apt-utils \
     ca-certificates\
     locales \
-    clang-${LLVM_VERSION} \
-    clang-tools-${LLVM_VERSION} \
-    clang-format-${LLVM_VERSION} \
-    lld-${LLVM_VERSION} \
+    clang \
+    clang-tools \
+    clang-format \
+    lld \
     cmake \
     curl \
     doxygen \
@@ -43,15 +29,13 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     python-is-python3 \
     python3 \
     python3-pip \
+    python3-pyqt5 \
     gcc-arm-linux-gnueabihf \
     qemu-user-static \
-    gdb-multiarch \
-    fish && \
+    gdb-multiarch && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
-    apt-get clean && \
-    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 && \
-    update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${LLVM_VERSION} 100
+    apt-get clean
 
 # ARM Embedded Toolchain
 # Integrity is checked using the MD5 checksum provided by ARM at https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
@@ -73,48 +57,42 @@ RUN case $(uname -m) in \
 # Adding ARM Embedded Toolchain to path
 ENV PATH=/opt/gcc-arm-none-eabi-${ARM_TOOLCHAIN_VERSION}/bin:$PATH
 
-# Download Nano S SDK, Nano S Plus SDK and Nano X SDK
-RUN cd /opt && git clone --branch ${NANOS_SDK_VERSION} https://github.com/LedgerHQ/nanos-secure-sdk.git nanos-secure-sdk && \
-    git clone --branch ${NANOSP_SDK_VERSION} https://github.com/LedgerHQ/nanosplus-secure-sdk.git nanosplus-secure-sdk && \
-    git clone --branch ${NANOX_SDK_VERSION} https://github.com/LedgerHQ/nanox-secure-sdk.git nanox-secure-sdk
-
+ARG GIT_SERVER=https://github.com/LedgerHQ
+# Latest Nano S SDK
+# Will switch to the unified SDK for next OS release.
 ENV NANOS_SDK=/opt/nanos-secure-sdk
-ENV NANOSP_SDK=/opt/nanoplus-secure-sdk
+RUN git clone --branch v2.1.0-19 --depth 1 "$GIT_SERVER/nanos-secure-sdk.git" "$NANOS_SDK"
+
+# Unified SDK
+ENV LEDGER_SECURE_SDK=/opt/ledger-secure-sdk
+RUN git clone "$GIT_SERVER/ledger-secure-sdk.git" "$LEDGER_SECURE_SDK"
+
+# Latest Nano X SDK (OS nanox_2.2.3 => based on API_LEVEL 5)
 ENV NANOX_SDK=/opt/nanox-secure-sdk
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOX_SDK" v5.11.1
+RUN echo nanox > $NANOX_SDK/.target
+
+# Latest Nano S+ SDK (OS nanos+_1.1.1 => based on API_LEVEL 5)
+ENV NANOSP_SDK=/opt/nanosplus-secure-sdk
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOSP_SDK" v5.11.1
+RUN echo nanos2 > $NANOSP_SDK/.target
+
+# Latest Stax SDK (OS stax_1.4.0-rc2 => based on API_LEVEL 15)
+ENV STAX_SDK=/opt/stax-secure-sdk
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v15.4.0
+RUN echo stax > $STAX_SDK/.target
+
+# Latest Flex SDK (OS flex_0.2.0-rc2 => based on API_LEVEL 18)
+ENV FLEX_SDK=/opt/flex-secure-sdk
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v18.3.0
+RUN echo flex > $FLEX_SDK/.target
+
 # Default SDK
-ENV BOLOS_SDK=${NANOS_SDK}
+ENV BOLOS_SDK=$NANOS_SDK
 
-RUN cd /opt \
-    && git clone https://github.com/LedgerHQ/speculos.git speculos \
-    && cd speculos \
-    # disable vnc
-    && sed -i 's/-DWITH_VNC=1/-DWITH_VNC=0/g' setup.py \
-    # disable qt
-    && sed -i '/pyqt5/d' setup.py \
-    && pip install . \
-    # Werkzeug >= 2.1.0 fail
-    && pip install Werkzeug==2.0.3 \
-    # && pip cache purge
-    && rm -rf /root/.cache/pip/
-
-# Set up locale
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
-    && locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
-# Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/fish --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    # [Optional] Add sudo support for the non-root user
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+RUN pip3 install --no-cache-dir speculos==0.8.6
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
 
-USER $USERNAME
-
-CMD ["/bin/fish"]
+CMD ["/bin/bash"]
