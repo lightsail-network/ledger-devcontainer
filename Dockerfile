@@ -1,10 +1,6 @@
 # You can find more information here: https://github.com/overcat/ledger-devcontainer
 FROM ubuntu:jammy
 
-ARG ARM_TOOLCHAIN_VERSION=10.3-2021.10
-ARG ARM_TOOLCHAIN_AMD64_MD5=2383e4eb4ea23f248d33adc70dc3227e
-ARG ARM_TOOLCHAIN_ARM64_MD5=3fe3d8bb693bd0a6e4615b6569443d0d
-
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -36,6 +32,10 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     apt-get clean
+
+ARG ARM_TOOLCHAIN_VERSION=10.3-2021.10
+ARG ARM_TOOLCHAIN_AMD64_MD5=2383e4eb4ea23f248d33adc70dc3227e
+ARG ARM_TOOLCHAIN_ARM64_MD5=3fe3d8bb693bd0a6e4615b6569443d0d
 
 # ARM Embedded Toolchain
 # Integrity is checked using the MD5 checksum provided by ARM at https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
