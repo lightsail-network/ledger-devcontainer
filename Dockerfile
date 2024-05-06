@@ -93,7 +93,7 @@ RUN echo flex > $FLEX_SDK/.target
 # Default SDK
 ENV BOLOS_SDK=$NANOS_SDK
 
-RUN pip3 install --no-cache-dir --break-system-packages speculos==0.8.6
+RUN pip3 install --no-cache-dir --break-system-packages ledgerblue speculos==0.8.6
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
