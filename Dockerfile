@@ -1,5 +1,5 @@
 # You can find more information here: https://github.com/overcat/ledger-devcontainer
-FROM ubuntu:jammy
+FROM ubuntu:24.04
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -26,6 +26,9 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     python3 \
     python3-pip \
     python3-pyqt5 \
+    nodejs \
+    npm \
+    fish \
     gcc-arm-linux-gnueabihf \
     qemu-user-static \
     gdb-multiarch && \
@@ -90,7 +93,7 @@ RUN echo flex > $FLEX_SDK/.target
 # Default SDK
 ENV BOLOS_SDK=$NANOS_SDK
 
-RUN pip3 install --no-cache-dir speculos==0.8.6
+RUN pip3 install --no-cache-dir --break-system-packages speculos==0.8.6
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
