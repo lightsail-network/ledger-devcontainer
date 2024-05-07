@@ -34,6 +34,16 @@ It contains the following:
 
 The `devcontainer.json` has some additional configuration for VSCode, you can customize it to your needs.
 
+## Is the Speculos window not popping up correctly?
+
+On macOS and Windows, make sure an X Window System server is installed and running (see [XQuartz](https://www.xquartz.org/) for mac and [VcXsrv](https://sourceforge.net/projec) for windows) otherwise, the window will not pop up correctly. **Make sure client connections are allowed**.
+
+If you really don't want to use the graphical interface, you can run Speculos using the following command, and then you can control it in the browser:
+
+```bash
+speculos --display headless bin/app.elf
+```
+
 ## Does it work on Apple Silicon?
 
 **Yes.**
