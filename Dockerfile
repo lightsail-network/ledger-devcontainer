@@ -93,14 +93,14 @@ RUN echo flex > $FLEX_SDK/.target
 # Default SDK
 ENV BOLOS_SDK=$NANOS_SDK
 
-RUN pip3 install --no-cache-dir --break-system-packages ledgerblue speculos==0.9.0
+RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.4.0 speculos==0.9.0
 
 # Rust
 ARG RUST_VERSION=nightly-2023-11-10
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
 ENV PATH=$PATH:/root/.cargo/bin
 RUN rustup component add rust-src --toolchain "$RUST_VERSION"
-RUN cargo install cargo-ledger && cargo ledger setup
+RUN cargo install --locked --version 1.3.0 cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
