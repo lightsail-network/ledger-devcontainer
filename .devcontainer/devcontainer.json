@@ -15,7 +15,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-vscode.cpptools-extension-pack"
+				"ms-vscode.cpptools-extension-pack",
+				"Swellaby.rust-pack"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "fish",

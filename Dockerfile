@@ -11,6 +11,7 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     clang \
     clang-tools \
     clang-format \
+    llvm \
     lld \
     cmake \
     curl \
@@ -22,7 +23,6 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     libcmocka-dev \
     make \
     protobuf-compiler \
-    python-is-python3 \
     python3 \
     python3-pip \
     python3-pyqt5 \
@@ -94,6 +94,13 @@ RUN echo flex > $FLEX_SDK/.target
 ENV BOLOS_SDK=$NANOS_SDK
 
 RUN pip3 install --no-cache-dir --break-system-packages ledgerblue speculos==0.9.0
+
+# Rust
+ARG RUST_VERSION=nightly-2023-11-10
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
+ENV PATH=$PATH:/root/.cargo/bin
+RUN rustup component add rust-src --toolchain "$RUST_VERSION"
+RUN cargo install cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
