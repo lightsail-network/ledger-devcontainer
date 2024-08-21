@@ -83,25 +83,29 @@ RUN echo nanos2 > $NANOSP_SDK/.target
 
 # Latest Stax SDK (OS stax_1.5.0 => based on API_LEVEL 21)
 ENV STAX_SDK=/opt/stax-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v21.3.0
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v21.3.1
 RUN echo stax > $STAX_SDK/.target
 
 # Latest Flex SDK (OS flex_1.1.1 => based on API_LEVEL 21)
 ENV FLEX_SDK=/opt/flex-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v21.3.0
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v21.3.1
 RUN echo flex > $FLEX_SDK/.target
 
 # Default SDK
 ENV BOLOS_SDK=$NANOS_SDK
 
-RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.5.0 speculos==0.9.6
+# https://pypi.org/project/ledgerblue/
+# https://pypi.org/project/ledgerwallet/
+# https://pypi.org/project/speculos/
+RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.5.0 speculos==0.9.7
 
 # Rust
 ARG RUST_VERSION=nightly-2023-11-10
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
 ENV PATH=$PATH:/root/.cargo/bin
 RUN rustup component add rust-src --toolchain "$RUST_VERSION"
-RUN cargo install --locked --version 1.4.1 cargo-ledger && cargo ledger setup
+# https://crates.io/crates/cargo-ledger/1.5.1
+RUN cargo install --locked --version 1.5.1 cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
