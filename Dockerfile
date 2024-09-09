@@ -100,11 +100,11 @@ ENV BOLOS_SDK=$NANOS_SDK
 RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.5.0 speculos==0.9.7
 
 # Rust
-ARG RUST_VERSION=nightly-2023-11-10
+ARG RUST_VERSION=nightly-2024-09-08
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
 ENV PATH=$PATH:/root/.cargo/bin
 RUN rustup component add rust-src --toolchain "$RUST_VERSION"
-# https://crates.io/crates/cargo-ledger/1.5.1
+# https://crates.io/crates/cargo-ledger
 RUN cargo install --locked --version 1.5.1 cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
