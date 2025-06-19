@@ -68,27 +68,27 @@ RUN git clone "$GIT_SERVER/ledger-secure-sdk.git" "$LEDGER_SECURE_SDK"
 
 # Latest Nano S SDK (OS nanos_2.1.0 => based on API_LEVEL LNS)
 ENV NANOS_SDK=/opt/nanos-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOS_SDK" lns-2.1.0-v22.1
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOS_SDK" lns-2.1.0-v24.0
 RUN echo nanos > $NANOS_SDK/.target
 
-# Latest Nano X SDK (OS nanox_2.2.4 => based on API_LEVEL 5)
+# Latest Nano X SDK based on API_LEVEL 22
 ENV NANOX_SDK=/opt/nanox-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOX_SDK" v5.13.1
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOX_SDK" v22.13.0
 RUN echo nanox > $NANOX_SDK/.target
 
-# Latest Nano S+ SDK (OS nanos+_1.1.2 => based on API_LEVEL 5)
+# Latest Nano S+ SDK based on API_LEVEL 22
 ENV NANOSP_SDK=/opt/nanosplus-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOSP_SDK" v5.13.1
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOSP_SDK" v22.13.0
 RUN echo nanos2 > $NANOSP_SDK/.target
 
-# Latest Stax SDK (OS stax_1.5.0 => based on API_LEVEL 21)
+# Latest Stax SDK based on API_LEVEL 22
 ENV STAX_SDK=/opt/stax-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v21.3.1
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v22.13.0
 RUN echo stax > $STAX_SDK/.target
 
-# Latest Flex SDK (OS flex_1.1.1 => based on API_LEVEL 21)
+# Latest Flex SDK based on API_LEVEL 22
 ENV FLEX_SDK=/opt/flex-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v21.3.1
+RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v22.13.0
 RUN echo flex > $FLEX_SDK/.target
 
 # Default SDK
@@ -97,15 +97,15 @@ ENV BOLOS_SDK=$NANOS_SDK
 # https://pypi.org/project/ledgerblue/
 # https://pypi.org/project/ledgerwallet/
 # https://pypi.org/project/speculos/
-RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.5.0 speculos==0.9.7
+RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.6.0 speculos==0.22.0
 
 # Rust
-ARG RUST_VERSION=nightly-2024-09-08
+ARG RUST_VERSION=nightly-2024-12-01
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
 ENV PATH=$PATH:/root/.cargo/bin
 RUN rustup component add rust-src --toolchain "$RUST_VERSION"
 # https://crates.io/crates/cargo-ledger
-RUN cargo install --locked --version 1.5.1 cargo-ledger && cargo ledger setup
+RUN cargo install --locked --version 1.8.1 cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
