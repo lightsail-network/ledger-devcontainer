@@ -97,7 +97,7 @@ ENV BOLOS_SDK=$NANOS_SDK
 # https://pypi.org/project/ledgerblue/
 # https://pypi.org/project/ledgerwallet/
 # https://pypi.org/project/speculos/
-RUN pip3 install --no-cache-dir --break-system-packages ledgerblue==0.1.54 ledgerwallet==0.6.0 speculos==0.22.0
+RUN pip3 install --no-cache-dir --break-system-packages ledgerwallet==0.6.0 speculos==0.22.0
 
 # Rust
 ARG RUST_VERSION=nightly-2024-12-01
