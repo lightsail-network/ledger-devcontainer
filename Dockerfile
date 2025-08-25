@@ -65,37 +65,31 @@ ARG GIT_SERVER=https://github.com/LedgerHQ
 
 # Unified SDK
 ENV LEDGER_SECURE_SDK=/opt/ledger-secure-sdk
-RUN git clone "$GIT_SERVER/ledger-secure-sdk.git" "$LEDGER_SECURE_SDK"
-
 # Latest Nano S SDK (OS nanos_2.1.0 => based on API_LEVEL LNS)
 ENV NANOS_SDK=/opt/nanos-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOS_SDK" lns-2.1.0-v24.0
-RUN echo nanos > $NANOS_SDK/.target
-
 # Latest Nano X SDK based on API_LEVEL 24
 ENV NANOX_SDK=/opt/nanox-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOX_SDK" v24.1.0
-RUN echo nanox > $NANOX_SDK/.target
-
 # Latest Nano S+ SDK based on API_LEVEL 24
 ENV NANOSP_SDK=/opt/nanosplus-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$NANOSP_SDK" v24.1.0
-RUN echo nanos2 > $NANOSP_SDK/.target
-
 # Latest Stax SDK based on API_LEVEL 24
 ENV STAX_SDK=/opt/stax-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v24.1.0
-RUN echo stax > $STAX_SDK/.target
-
 # Latest Flex SDK based on API_LEVEL 24
 ENV FLEX_SDK=/opt/flex-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v24.1.0
-RUN echo flex > $FLEX_SDK/.target
-
 # Latest Apex P SDK based on API_LEVEL 25
 ENV APEX_P_SDK=/opt/apex-secure-sdk
-RUN git -C "$LEDGER_SECURE_SDK" worktree add "$APEX_P_SDK" v25.1.0
-RUN echo apex_p > $APEX_P_SDK/.target
+RUN git clone "$GIT_SERVER/ledger-secure-sdk.git" "$LEDGER_SECURE_SDK" && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$NANOS_SDK" lns-2.1.0-v24.0 && \
+    echo nanos > $NANOS_SDK/.target && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$NANOX_SDK" v24.1.0 && \
+    echo nanox > $NANOX_SDK/.target && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$NANOSP_SDK" v24.1.0 && \
+    echo nanos2 > $NANOSP_SDK/.target && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$STAX_SDK" v24.1.0 && \
+    echo stax > $STAX_SDK/.target && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$FLEX_SDK" v24.1.0 && \
+    echo flex > $FLEX_SDK/.target && \
+    git -C "$LEDGER_SECURE_SDK" worktree add "$APEX_P_SDK" v25.1.0 && \
+    echo apex_p > $APEX_P_SDK/.target
 
 # Default SDK
 ENV BOLOS_SDK=$NANOS_SDK
@@ -107,11 +101,13 @@ RUN pip3 install --no-cache-dir --break-system-packages ledgerwallet==0.6.0 spec
 
 # Rust
 ARG RUST_VERSION=nightly-2024-12-01
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain "$RUST_VERSION" -y && \
+    . $HOME/.cargo/env && \
+    rustup component add rust-src --toolchain "$RUST_VERSION" && \
+    # https://crates.io/crates/cargo-ledger
+    cargo install --locked --version 1.9.0 cargo-ledger && \
+    cargo ledger setup
 ENV PATH=$PATH:/root/.cargo/bin
-RUN rustup component add rust-src --toolchain "$RUST_VERSION"
-# https://crates.io/crates/cargo-ledger
-RUN cargo install --locked --version 1.9.0 cargo-ledger && cargo ledger setup
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
