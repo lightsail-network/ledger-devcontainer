@@ -23,6 +23,7 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     libcmocka-dev \
     make \
     protobuf-compiler \
+    libxcb-cursor0 \
     python3 \
     python3-pip \
     python3-pyqt5 \
