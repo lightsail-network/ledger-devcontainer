@@ -24,13 +24,14 @@ For more information and setup, read the official documentation: https://code.vi
 
 It contains the following:
 
-1. `/opt/nanos-secure-sdk/` - [Nano S Secure SDK](https://github.com/LedgerHQ/nanos-secure-sdk)
+1. `/opt/nanos-secure-sdk/` - [Nano S Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
 2. `/opt/nanox-secure-sdk/` - [Nano X Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
 3. `/opt/nanoplus-secure-sdk/` - [Nano S Plus Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
 4. `/opt/stax-secure-sdk/` - [Stax Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
 5. `/opt/flex-secure-sdk/` - [Flex Plus Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
-6. `/opt/gcc-arm-none-eabi-10.3-2021.10/` - [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
-7. `speculos` - [Speculos](https://github.com/LedgerHQ/speculos)
+6. `/opt/apex-secure-sdk/` - [Apex P Secure SDK](https://github.com/LedgerHQ/ledger-secure-sdk)
+7. `/opt/gcc-arm-none-eabi-10.3-2021.10/` - [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm)
+8. `speculos` - [Speculos](https://github.com/LedgerHQ/speculos)
 
 The `devcontainer.json` has some additional configuration for VSCode, you can customize it to your needs.
 
