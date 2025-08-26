@@ -27,12 +27,12 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     python3 \
     python3-pip \
     python3-pyqt5 \
-    nodejs \
-    npm \
     fish \
     gcc-arm-linux-gnueabihf \
     qemu-user-static \
     gdb-multiarch && \
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     apt-get clean
