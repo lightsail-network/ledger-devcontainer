@@ -17,6 +17,7 @@ RUN apt-get update && apt-get upgrade -qy && apt-get install -qy \
     curl \
     doxygen \
     git \
+    jq \
     lcov \
     libbsd-dev \
     libcmocka0 \
@@ -97,7 +98,7 @@ ENV BOLOS_SDK=$NANOS_SDK
 # https://pypi.org/project/ledgerblue/
 # https://pypi.org/project/ledgerwallet/
 # https://pypi.org/project/speculos/
-RUN pip3 install --no-cache-dir --break-system-packages ledgerwallet==0.6.0 speculos==0.25.3
+RUN pip3 install --no-cache-dir --break-system-packages ledgerwallet==0.6.0 speculos==0.25.3 ledgerblue==0.1.55
 
 # Rust
 ARG RUST_VERSION=nightly-2024-12-01
